@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+        <!-- CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <!-- JS -->
+        <!-- FontAwesome -->
+        <script src="https://use.fontawesome.com/9b3bd4052a.js"></script>
+        {% if title %}
+            <title>davaiops.com - {{ title }}</title>
+        {% else %}
+            <title>davaiops.com</title>
+        {% endif %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <img class="nav-logo" src="{{ url_for('static', filename='images/favicon.png') }}" alt="20-sided die logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    {% set nav_dict = [
+                        ('main.projects', 'Projects'),
+                        ('main.contact', 'Contact')
+                    ] -%}
+
+                    {% for id, caption in nav_dict %}
+                        <li class="nav-item {{'active' if request.endpoint == id}}">
+                            <a class="nav-link" href="{{ url_for(id) }}">{{ caption }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                 <!-- Navbar Right Side -->
+                <div class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{{ url_for('admin.tables') }}">Admin</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Log Out</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        {% block content %}
+            <div class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert {{ category }}"> {{ message|capitalize }} </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% if current_user.is_authenticated %}
+                    {% with tasks =  current_user.get_tasks_in_progress() %}
+                        {% if tasks %}
+                            {% for task in tasks %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ task.description }}
+                                    <span id="{{ task.id }}-progress">{{ task.get_progress() }}</span>%
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+                {# Application content needs to be provided in the app_content block #}
+                {% block app_content %}{% endblock app_content %}
+            </div>
+        {% endblock content %}
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
