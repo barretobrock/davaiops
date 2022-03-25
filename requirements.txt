@@ -1,0 +1,12 @@
+Flask==2.0.3
+Flask-Admin==1.6.0
+Flask-Bcrypt==0.7.1
+Flask-Login==0.5.0
+Flask-Security==3.0.0
+Flask-SQLAlchemy==2.5.1
+itsdangerous==2.1.1
+psycopg2==2.9.3
+PyJWT==2.3.0
+sqlalchemy==1.4.32
+Werkzeug==2.0.3
+WTForms==3.0.1
