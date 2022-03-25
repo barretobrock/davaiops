@@ -5,15 +5,16 @@
 # sudo systemctl enable <filename>
 
 [Unit]
-Description=Davaiops.com
+Description=Gunicorn instance to serve davaiops.com
 After=multi-user.target
 
 [Service]
 User=bobrock
-Group=bobrock
+Group=www-data
 Type=idle
-ExecStart=/home/bobrock/venvs/davaiops/bin/python3 /home/bobrock/extras/davaiops/run.py -lvl debug
 WorkingDirectory=/home/bobrock/extras/davaiops
+Environment="PATH=/home/bobrock/venvs/davaiops/bin"
+ExecStart=/home/bobrock/venvs/davaiops/bin/gunicorn --workers 3 --bind unix:davaiops.sock -m 007 wsgi:app
 Restart=on-failure
 
 [Install]

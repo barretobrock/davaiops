@@ -29,6 +29,8 @@ Make some new directories on the non-root user's home & set the timezone
 ```bash
 mkdir keys logs venvs extras data
 sudo timedatectl set-timezone America/Chicago
+# Reconfigure dash to bash
+sudo dpkg-reconfigure dash  # select 'No' to default to bash
 ```
 
 ## fail2ban
@@ -153,6 +155,12 @@ sudo apt install python3-pip python3-dev python3-venv build-essential libssl-dev
 # Install necessary packages
 python3 -m pip install wheel flask gunicorn
 ```
+
+Install the py-package-manager library
+```bash
+cd ~/extras && git clone https://github.com/barretobrock/py-package-manager.git
+```
+
 Clone the git repo, Create a sample app
 ```bash
 cd ~/extras && git clone https://github.com/barretobrock/davaiops.git
@@ -180,7 +188,7 @@ Check that the site shows this. Run `test.py` and then go to `http://{ip_address
 
 Create the WSGI entry point
 ```bash
-nano run.py
+nano wsgi.py
 ```
 ```python
 from test import app
@@ -201,21 +209,10 @@ Create the gunicorn service file
 ```bash
 sudo nano /etc/systemd/system/davaiops.service
 ```
-```unit file (systemd)
-[Unit]
-Description=Gunicorn instance to serve davaiops.com
-After=network.target
+Add the details from davaiops.service file
 
-[Service]
-User=bobrock
-Group=www-data
-WorkingDirectory=/home/bobrock/extras/davaiops
-Environment="PATH=/home/bobrock/venvs/davaiops/bin"
-ExecStart=/home/bobrock/venvs/davaiops/bin/gunicorn --workers 3 --bind unix:davaiops.sock -m 007 wsgi:app
+Then, add the SECRETKEY and REGISTRATIONKEY to the directories
 
-[Install]
-WantedBy=multi-user.target
-```
 Start the service & enable it
 ```bash
 sudo systemctl start davaiops
@@ -300,6 +297,8 @@ alter user {uname} with password '{secret}';
 ### Notes
  - For the `psycopg2` python package, it might be required to `sudo apt install libpq-dev`
 
+## 
+
 ## Sources
  - fail2ban
    - https://linuxize.com/post/install-configure-fail2ban-on-ubuntu-20-04/
@@ -311,3 +310,6 @@ alter user {uname} with password '{secret}';
    - http://www.project-open.com/en/howto-postgresql-port-secure-remote-access
    - https://stackoverflow.com/questions/17838613/open-port-in-ubuntu
    
+## Troubleshooting 
+ - failure on `update_script` with `x86_64-linux-gnu-gcc`
+   - `sudo apt install libpq-dev`
