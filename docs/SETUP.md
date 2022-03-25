@@ -180,7 +180,7 @@ Check that the site shows this. Run `test.py` and then go to `http://{ip_address
 
 Create the WSGI entry point
 ```bash
-nano wsgi.py
+nano run.py
 ```
 ```python
 from test import app
