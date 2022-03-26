@@ -1,6 +1,7 @@
 from flask import (
     render_template,
-    Blueprint
+    Blueprint,
+    Response
 )
 
 main = Blueprint('main', __name__)
@@ -20,3 +21,11 @@ def projects():
 @main.route('/contact')
 def contact() -> str:
     return render_template('contact.html', title='Contact')
+
+
+@main.route('/robots.txt')
+def robots() -> Response:
+    """Responds with robots.txt instructions to discourage web crawling"""
+    resp = Response(response="User-Agent: *\nDisallow: /\n", status=200, mimetype="text/plain")
+    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return resp

@@ -64,7 +64,7 @@ sudo nano /etc/fail2ban/filter.d/nginx-4xx.conf
 Add the following:
 ```unit file (systemd)
 [Definition]
-failregex = ^<HOST>.*"(GET|POST).*" (404|444|403|400) .*$
+failregex = ^<HOST>.*"(GET|POST).*" (4\d{2}) .*$
 ignoreregex = 
 ```
 Then open the jail.local
@@ -78,6 +78,52 @@ enabled = true
 port = http,https
 logpath = /var/log/nginx/access.log
 maxretry = 3
+```
+Restart fail2ban
+```bash
+sudo systemctl restart fail2ban
+```
+
+### Add postgres port blocking
+Edit postgres settings to include host in log output
+```bash
+sudo nano /etc/postgresql/12/main/postgresql.conf
+```
+Make log_line_prefix look like this:
+```editorconfig
+log_line_prefix = '%h %m [%p] %q%u@%d '
+```
+Restart postgres
+```bash
+sudo systemctl restart postgresql
+```
+
+Create a filter for postgres
+```bash
+sudo nano /etc/fail2ban/filter.d/custom-postgres.conf
+```
+Populate with this:
+```unit file (systemd)
+[Definition]
+failregex = ^<HOST>.+FATAL:.+password authentication failed for user.+$
+            ^<HOST>.+FATAL:.+no pg_hba.conf entry for host.+$
+ignoreregex = 
+```
+Then open the jail.local
+```bash
+sudo nano /etc/fail2ban/jail.local
+```
+Add the following:
+```unit file (systemd)
+[custom-postgres]
+enabled = true
+port = 5432
+logpath = /var/log/postgresql/postgresql-12-main.log
+maxretry = 3
+```
+Restart fail2ban
+```bash
+sudo systemctl restart fail2ban
 ```
 
 ## nginx / gunicorn / certbot
@@ -120,17 +166,16 @@ sudo nano /etc/nginx/sites-available/davaiops.com
 Copy/paste this into that file
 ```
 server {
-        listen 80;
-        listen [::]:80;
+   listen 80;
+   listen [::]:80;
+   
+   server_name davaiops.com www.davaiops.com;
 
-        root /var/www/davaiops.com/html;
-        index index.html index.htm index.nginx-debian.html;
-
-        server_name davaiops.com www.davaiops.com;
-
-        location / {
-                try_files $uri $uri/ =404;
-        }
+   location / {
+      proxy_set_header Host $host;
+      proxy_pass http://127.0.0.1:<port>;
+      proxy_redirect off;   
+   }
 }
 ```
 Then enable the file by creating a link from it to the `sites-enabled` directory
@@ -191,10 +236,6 @@ Add the details from davaiops.service file
 
 Then, add the SECRETKEY and REGISTRATIONKEY to the directories
 
-Symlink project root to the /var/www project folder
-```bash
-sudo ln -s /home/bobrock/extras/davaiops/davaiops/templates/ /var/www/davaiops.com/html
-```
 
 Start the service & enable it
 ```bash
@@ -202,19 +243,7 @@ sudo systemctl start davaiops
 sudo systemctl enable davaiops
 ```
 ### Configure proxy requests
-```bash
-sudo nano /etc/nginx/sites-available/davaiops.com
-```
-Add the following to the `location` section after `try_files`:
-```
-include proxy_params;
-proxy_pass http://unix:/home/bobrock/extras/davaiops/davaiops.sock;
-```
-Test nginx and reload
-```bash
-sudo nginx -t
-sudo systemctl restart nginx
-```
+
 Remove port 5000 access since we don't need it
 ```bash
 sudo ufw delete allow 5000
@@ -256,8 +285,10 @@ Then edit `pg_hba.conf`
 sudo nano /etc/postgresql/12/main/pg_hba.conf
 ```
 ```editorconfig
-host    all             all              0.0.0.0/0                       md5
-host    all             all              ::/0                            md5
+# This is the setup to allow all connections - generally best not to do for a remote server
+#host    all             all              0.0.0.0/0                       md5
+#host    all             all              ::/0                            md5
+host    all             {USER}          {client_ip}/32                  md5
 ```
 Then restart again
 ```bash
@@ -277,10 +308,42 @@ Then begin adding passwords:
 ```postgresql
 alter user {uname} with password '{secret}';
 ```
+
+### Configure allowed hosts
+Update `pg_hba.conf` to set up a list of allowed connection details
+```bash
+sudo nano /etc/postgresql/12/main/pg_hba.conf
+```
+Add in something like this:
+```
+host  {database}     {user}   {client_ip_address}/32     md5
+```
+Then set the listening addresses
+```bash
+sudo nano /etc/postgresql/12/main/postgresql.conf
+```
+Make sure the __server__ ip is included with localhost:
+```
+listen_addresses = 'localhost,{server_ip_address}'
+```
+Restart the service
+```bash
+sudo systemctl restart postgresql
+```
+
 ### Notes
  - For the `psycopg2` python package, it might be required to `sudo apt install libpq-dev`
+ - Test regex applied to fail2ban with something like the following:
+   - `sudo fail2ban-regex {LOG_PATH} "{REGEX}"` OR `sudo fail2ban-regex {LOG_PATH} {PATH_TO_FILTER.D/CONF_FILE}`
+   - OR, you can write the example log items to a temp file, pass that 
 
-## 
+## Logs
+ - postgres
+   - /var/log/postgresql/postgresql-12-main.log
+ - nginx
+   - /var/log/nginx/{access,error}.log
+ - sshd
+   - /var/log/auth.d
 
 ## Sources
  - fail2ban
@@ -288,10 +351,13 @@ alter user {uname} with password '{secret}';
    - https://github.com/mikey32230/fail2ban-slack-action
    - https://arvind.io/posts/using-fail2ban-to-protect-exposed-services/
    - https://www.ericlight.com/fail2bannginx-blocking-repeated-404s-etc.html
+   - https://talk.plesk.com/threads/howto-secure-a-standard-postgres-port-with-fail2ban.355984/
+   - https://www.the-art-of-web.com/system/fail2ban-filters/
  - postgres
    - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04
    - http://www.project-open.com/en/howto-postgresql-port-secure-remote-access
    - https://stackoverflow.com/questions/17838613/open-port-in-ubuntu
+   - https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-against-automated-attacks
    
 ## Troubleshooting 
  - failure on `update_script` with `x86_64-linux-gnu-gcc`
