@@ -165,37 +165,15 @@ Clone the git repo, Create a sample app
 ```bash
 cd ~/extras && git clone https://github.com/barretobrock/davaiops.git
 cd davaiops
-nano test.py
+source ~/venvs/davaiops/bin/activate
 ```
-```python
-from flask import Flask
 
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "<h1 style='color: blue'>Welcome!</h1>"   
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
-```
 Allow access to port 5000
 ```bash
 sudo ufw allow 5000
 ```
-Check that the site shows this. Run `test.py` and then go to `http://{ip_address}:5000`
+Check that the site shows this. Run `run_debug.py` and then go to `http://{ip_address}:5000`
 
-Create the WSGI entry point
-```bash
-nano wsgi.py
-```
-```python
-from test import app
-
-if __name__ == "__main__":
-    app.run()
-```
 ### Gunicorn setup
 Check that gunicorn can serve the application correctly
 ```bash
@@ -212,6 +190,11 @@ sudo nano /etc/systemd/system/davaiops.service
 Add the details from davaiops.service file
 
 Then, add the SECRETKEY and REGISTRATIONKEY to the directories
+
+Symlink project root to the /var/www project folder
+```bash
+sudo ln -s /home/bobrock/extras/davaiops/davaiops/templates/ /var/www/davaiops.com/html
+```
 
 Start the service & enable it
 ```bash

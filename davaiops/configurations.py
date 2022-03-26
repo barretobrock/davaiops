@@ -16,10 +16,10 @@ class Config(object):
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f'postgres://localhost/davaidb'
-    SECRET_KEY = os.environ.get('DAVAI_SECRET_KEY')
-    REGISTER_KEY = os.environ.get('REGISTRATION_KEY')
-    STATIC_DIR_PATH = 'static'
-    TEMPLATE_DIR_PATH = 'templates'
+    SECRET_KEY = get_local_secret(os.path.join(key_dir, 'DAVAI_SECRET_KEY'))
+    REGISTER_KEY = get_local_secret(os.path.join(key_dir, 'REGISTRATION_KEY'))
+    STATIC_DIR_PATH = '../static'
+    TEMPLATE_DIR_PATH = '../templates'
 
 
 class BaseConfig(Config):
@@ -44,7 +44,3 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     TEMPLATES_AUTO_RELOAD = True
-    SECRET_KEY = get_local_secret(os.path.join(key_dir, 'DAVAI_SECRET_KEY'))
-    REGISTER_KEY = get_local_secret(os.path.join(key_dir, 'REGISTRATION_KEY'))
-    STATIC_DIR_PATH = '../static'
-    TEMPLATE_DIR_PATH = '../templates'
