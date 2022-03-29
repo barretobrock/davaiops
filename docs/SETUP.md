@@ -37,6 +37,10 @@ sudo dpkg-reconfigure dash  # select 'No' to default to bash
 Follow the guide in sources, then make the following changes:
  - ignore-ips
  - ban timing, duration 
+ - Install mailutils to resolve a potential issue with sendmail
+   - `sudo apt install mailutils`
+   - Select 'local only'
+   - enter domain name
 
 ### Add slack message option
 Next, add slack message to action (see link in sources)
