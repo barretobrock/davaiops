@@ -25,7 +25,11 @@ def vota_vastu():
     Docs: https://www.twilio.com/docs/voice/twiml/play#attributes-digits
     """
     response = VoiceResponse()
-    caller = request.values.get('From')
+    try:
+        caller = request.values.get('From')
+    except Exception as err:
+        current_app.logger.error(err)
+        caller = 'Unknown'
     current_app.logger.info(f'Receiving call from: {caller}')
     allowlist = current_app.config.get('CALL_ALLOW_LIST', [])
     if caller not in allowlist:
