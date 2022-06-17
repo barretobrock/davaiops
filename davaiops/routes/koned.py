@@ -28,6 +28,7 @@ def vota_vastu():
     """
     response = VoiceResponse()
     response.record()
+    response.play(digits='1')
     try:
         caller = request.values.get('From')
     except Exception as err:
@@ -43,11 +44,11 @@ def vota_vastu():
         # response.reject()
     else:
         current_app.logger.info('Caller is in allowlist...')
-        dial = Dial()
-        dial.number(',1,,9,,')
+        # dial = Dial()
+        # dial.number(',1,,9,,')
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
-        response.append(dial)
+        # response.append(dial)
         response.pause(2)
     current_app.logger.debug(f'Replying with {response}')
     return str(response)
