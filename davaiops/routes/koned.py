@@ -27,7 +27,6 @@ def vota_vastu():
     Docs: https://www.twilio.com/docs/voice/twiml/play#attributes-digits
     """
     response = VoiceResponse()
-    # response.record()
     response.play(digits='1')
     try:
         caller = request.values.get('From')
@@ -49,7 +48,8 @@ def vota_vastu():
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
         # response.append(dial)
-        response.pause(2)
+        response.record()
+        response.pause(5)
         response.hangup()
     current_app.logger.debug(f'Replying with {response}')
     return str(response)
