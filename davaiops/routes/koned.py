@@ -34,6 +34,7 @@ def vota_vastu():
     allowlist = current_app.config.get('CALL_ALLOW_LIST', [])
     if caller not in allowlist:
         current_app.logger.info('Denying call that is not in allowlist...')
+        response.say('Not accepted.')
         response.reject()
     else:
         current_app.logger.info('Caller is in allowlist...')
@@ -44,3 +45,8 @@ def vota_vastu():
         response.append(dial)
     current_app.logger.debug(f'Replying with {response}')
     return str(response)
+
+
+@koned.route('/incoming-message', methods=['GET', 'POST'])
+def receive_message():
+    current_app.logger.info(f'Receiving: {request.values}')
