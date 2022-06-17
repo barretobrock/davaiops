@@ -27,6 +27,7 @@ def vota_vastu():
     Docs: https://www.twilio.com/docs/voice/twiml/play#attributes-digits
     """
     response = VoiceResponse()
+    response.record()
     try:
         caller = request.values.get('From')
     except Exception as err:
@@ -36,10 +37,9 @@ def vota_vastu():
     allowlist = current_app.config.get('CALL_ALLOW_LIST', [])
     if caller not in allowlist:
         current_app.logger.info('Denying call that is not in allowlist...')
-        response.record()
+        response.say('Not accepted.')
         response.pause(12)
         response.hangup()
-        # response.say('Not accepted.')
         # response.reject()
     else:
         current_app.logger.info('Caller is in allowlist...')
@@ -48,6 +48,7 @@ def vota_vastu():
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
         response.append(dial)
+        response.pause(2)
     current_app.logger.debug(f'Replying with {response}')
     return str(response)
 
