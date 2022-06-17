@@ -37,6 +37,7 @@ def vota_vastu():
     if caller not in allowlist:
         current_app.logger.info('Denying call that is not in allowlist...')
         response.record()
+        response.pause(12)
         response.hangup()
         # response.say('Not accepted.')
         # response.reject()
