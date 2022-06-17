@@ -48,7 +48,6 @@ def vota_vastu():
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
         # response.append(dial)
-        response.record(action='/incoming-vmail')
         response.pause(5)
         response.hangup()
     current_app.logger.debug(f'Replying with {response}')
