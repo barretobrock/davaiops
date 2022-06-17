@@ -27,7 +27,7 @@ def vota_vastu():
     Docs: https://www.twilio.com/docs/voice/twiml/play#attributes-digits
     """
     response = VoiceResponse()
-    response.record()
+    # response.record()
     response.play(digits='1')
     try:
         caller = request.values.get('From')
