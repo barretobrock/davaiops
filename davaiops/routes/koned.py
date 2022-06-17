@@ -48,7 +48,7 @@ def vota_vastu():
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
         # response.append(dial)
-        response.record()
+        response.record(action='/incoming-vmail')
         response.pause(5)
         response.hangup()
     current_app.logger.debug(f'Replying with {response}')
@@ -57,5 +57,11 @@ def vota_vastu():
 
 @koned.route('/incoming-message', methods=['GET', 'POST'])
 def receive_message():
+    current_app.logger.info(f'Receiving: {request.values}')
+    return make_response('', 200)
+
+
+@koned.route('/incoming-vmail', methods=['GET', 'POST'])
+def receive_vmail():
     current_app.logger.info(f'Receiving: {request.values}')
     return make_response('', 200)
