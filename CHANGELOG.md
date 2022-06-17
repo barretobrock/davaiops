@@ -15,6 +15,16 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [1.0.1] - 2022-06-17
+#### Added
+ - Twilio receive call support
+#### Changed
+ - Moved `tests` to outside of project
+ - Shift to `pathlib` over `os`
+#### Fixed
+ - `Flask-SQLAlchemy` wasn't in requirements
+ - `tox` called Python 3.8 instead of 3.10
+ 
 ### [1.0.0] - 2022-04-20
 #### Added
  - CHANGELOG

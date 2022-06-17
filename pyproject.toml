@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "davaiops"
-version = '1.0.0'
+version = '1.0.1'
 description = "A Flask webapp for hosting projects."
 authors = ["bobrock <bobrock@tuta.io>"]
 license = "MIT"
@@ -24,8 +24,10 @@ Flask-Admin = "1.6.0"
 Flask-Bcrypt = "^1.0.1"
 Flask-Login = "^0.6.0"
 Flask-Security = "^3.0.0"
+Flask-SQLAlchemy = "^2.5.1"
 itsdangerous = "2.1.2"
 sqlalchemy = "^1.4.35"
+twilio = "^7.9.3"
 Werkzeug = "2.1.1"
 WTForms = "3.0.1"
 # Optional dependencies would go down here
