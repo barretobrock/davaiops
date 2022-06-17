@@ -1,10 +1,11 @@
-import os
-key_dir = os.path.abspath('/home/bobrock/keys/')
+from pathlib import Path
+
+KEY_DIR = Path().home().joinpath('keys')
 
 
-def get_local_secret(path: str) -> str:
+def get_local_secret(fpath: Path) -> str:
     """Grabs a locally-stored secret for debugging"""
-    with open(path) as f:
+    with fpath.open('r') as f:
         return f.read().strip()
 
 
@@ -15,9 +16,11 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = f'postgres://localhost/davaidb'
-    SECRET_KEY = get_local_secret(os.path.join(key_dir, 'DAVAI_SECRET_KEY'))
-    REGISTER_KEY = get_local_secret(os.path.join(key_dir, 'REGISTRATION_KEY'))
+    SQLALCHEMY_DATABASE_URI = 'postgres://localhost/davaidb'
+    SECRET_KEY = get_local_secret(KEY_DIR.joinpath('DAVAI_SECRET_KEY'))
+    REGISTER_KEY = get_local_secret(KEY_DIR.joinpath('REGISTRATION_KEY'))
+    TWILIO_SID = get_local_secret(KEY_DIR.joinpath('TWILIO_SID'))
+    TWILIO_TOKEN = get_local_secret(KEY_DIR.joinpath('TWILIO_TOKEN'))
     STATIC_DIR_PATH = '../static'
     TEMPLATE_DIR_PATH = '../templates'
 

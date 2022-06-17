@@ -8,6 +8,7 @@ from davaiops.flask_base import (
 )
 from davaiops.routes.admin import admin
 from davaiops.routes.api import api
+from davaiops.routes.koned import koned
 from davaiops.routes.errors import errors
 from davaiops.routes.main import main
 from davaiops.routes.user import users
@@ -25,7 +26,7 @@ def create_app(*args, **kwargs) -> Flask:
     bcrypt.init_app(app)
     log_mgr.init_app(app)
     # Register routes
-    for rt in [admin, api, main, users, errors]:
+    for rt in [admin, api, koned, main, users, errors]:
         app.register_blueprint(rt)
 
     return app

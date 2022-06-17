@@ -4,7 +4,6 @@ from flask import (
 )
 from flask_login import login_required
 # Internal packages
-from davaiops.flask_base import db
 
 admin = Blueprint('admin', __name__)
 
