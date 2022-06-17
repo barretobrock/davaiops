@@ -15,6 +15,12 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [1.0.3] - 2022-06-17
+#### Added
+ - SMS support for verification
+#### Fixed
+ - Add deny message to deny call
+ 
 ### [1.0.2] - 2022-06-17
 #### Added
  - Flask log
