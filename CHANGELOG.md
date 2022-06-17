@@ -15,6 +15,11 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [1.0.2] - 2022-06-17
+#### Added
+ - Flask log
+ - Allowlist for incoming calls
+ 
 ### [1.0.1] - 2022-06-17
 #### Added
  - Twilio receive call support
