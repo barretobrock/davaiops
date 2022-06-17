@@ -23,7 +23,10 @@ def vota_vastu():
     """
     Docs: https://www.twilio.com/docs/voice/twiml/play#attributes-digits
     """
+    dial = Dial()
+    dial.number(',,1,,9,,,,')
     response = VoiceResponse()
     response.say('This is an automated reception channel. Please hold.')
-    response.play(digits='ww1w9')
+    response.play(digits='ww1wwwww9')
+    response.append(dial)
     return str(response)
