@@ -1,3 +1,4 @@
+import time
 from flask import (
     current_app,
     render_template,
@@ -35,8 +36,10 @@ def vota_vastu():
     allowlist = current_app.config.get('CALL_ALLOW_LIST', [])
     if caller not in allowlist:
         current_app.logger.info('Denying call that is not in allowlist...')
-        response.say('Not accepted.')
-        response.reject()
+        response.record()
+        response.hangup()
+        # response.say('Not accepted.')
+        # response.reject()
     else:
         current_app.logger.info('Caller is in allowlist...')
         dial = Dial()
@@ -51,4 +54,4 @@ def vota_vastu():
 @koned.route('/incoming-message', methods=['GET', 'POST'])
 def receive_message():
     current_app.logger.info(f'Receiving: {request.values}')
-    return make_response(200)
+    return make_response('', 200)
