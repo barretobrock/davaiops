@@ -50,6 +50,7 @@ def vota_vastu():
         response.play(digits='ww1wwwww9')
         # response.append(dial)
         response.pause(2)
+        response.hangup()
     current_app.logger.debug(f'Replying with {response}')
     return str(response)
 
