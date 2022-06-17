@@ -1,5 +1,7 @@
+import logging
 from flask import Flask
 # Internal packages
+from davaiops.logg import get_base_logger
 from davaiops.configurations import BaseConfig
 from davaiops.flask_base import (
     db,
@@ -14,6 +16,15 @@ from davaiops.routes.main import main
 from davaiops.routes.user import users
 
 
+logger = get_base_logger()
+
+
+class InterceptHandler(logging.Handler):
+    def emit(self, record):
+        logger_opt = logger.opt(depth=6, exception=record.exc_info)
+        logger_opt.log(record.levelno, record.getMessage())
+
+
 def create_app(*args, **kwargs) -> Flask:
     """Creates a Flask app instance"""
     # Config app
@@ -25,6 +36,10 @@ def create_app(*args, **kwargs) -> Flask:
     db.init_app(app)
     bcrypt.init_app(app)
     log_mgr.init_app(app)
+
+    # Register logger, bind handler into flask app
+    app.logger.addHandler(InterceptHandler())
+
     # Register routes
     for rt in [admin, api, koned, main, users, errors]:
         app.register_blueprint(rt)

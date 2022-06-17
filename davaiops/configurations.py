@@ -21,6 +21,7 @@ class Config(object):
     REGISTER_KEY = get_local_secret(KEY_DIR.joinpath('REGISTRATION_KEY'))
     TWILIO_SID = get_local_secret(KEY_DIR.joinpath('TWILIO_SID'))
     TWILIO_TOKEN = get_local_secret(KEY_DIR.joinpath('TWILIO_TOKEN'))
+    CALL_ALLOW_LIST = get_local_secret(KEY_DIR.joinpath('CALL_ALLOW_LIST')).split(',')
     STATIC_DIR_PATH = '../static'
     TEMPLATE_DIR_PATH = '../templates'
 
