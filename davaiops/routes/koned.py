@@ -2,6 +2,7 @@ from flask import (
     current_app,
     render_template,
     request,
+    make_response,
     Blueprint
 )
 from twilio.twiml.voice_response import (
@@ -50,3 +51,4 @@ def vota_vastu():
 @koned.route('/incoming-message', methods=['GET', 'POST'])
 def receive_message():
     current_app.logger.info(f'Receiving: {request.values}')
+    return make_response(200)
