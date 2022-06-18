@@ -14,7 +14,7 @@ Group=bobrock
 Type=idle
 WorkingDirectory=/home/bobrock/extras/davaiops
 Environment="PATH=/home/bobrock/venvs/davaiops/bin"
-ExecStart=/home/bobrock/venvs/davaiops/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 -m 007 wsgi:app
+ExecStart=/home/bobrock/venvs/davaiops/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 -m 007 wsgi:app --access-logfile '-' --error-logfile '-' --log-level 'debug'
 Restart=on-failure
 
 [Install]
