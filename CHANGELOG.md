@@ -15,6 +15,16 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [1.0.4] - 2022-06-25
+#### Added
+ - Better error handlers
+ - Logging w/ loguru (via `pukr`)
+ - Test binding to gunicorn logger and transmitting levels through that instance to the app
+#### Removed
+ - Unneeded code in `/koned`
+#### Fixed
+ - `pyproject.toml` was still building with Python 3.8 whooops
+ 
 ### [1.0.3] - 2022-06-17
 #### Added
  - SMS support for verification
