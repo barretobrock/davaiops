@@ -1,7 +1,8 @@
-import logging
-from pathlib import Path
 from flask import Flask
-from loguru import logger
+from pukr import (
+    get_logger,
+    InterceptHandler
+)
 # Internal packages
 from davaiops.configurations import BaseConfig
 from davaiops.flask_base import (
@@ -17,12 +18,6 @@ from davaiops.routes.main import main
 from davaiops.routes.user import users
 
 
-class InterceptHandler(logging.Handler):
-    def emit(self, record):
-        logger_opt = logger.opt(depth=6, exception=record.exc_info)
-        logger_opt.log(record.levelname, record.getMessage())
-
-
 def create_app(*args, **kwargs) -> Flask:
     """Creates a Flask app instance"""
     # Config app
@@ -35,22 +30,11 @@ def create_app(*args, **kwargs) -> Flask:
     bcrypt.init_app(app)
     log_mgr.init_app(app)
 
-    # Set up log path if necessary
-    logpath = Path().home().joinpath('logs').joinpath('davaiops')
-    logpath.mkdir(parents=True, exist_ok=True)
     # Register logger, bind handler into flask app
-    logger.add(
-        sink=logpath.joinpath('davaiops.log'),
-        level='DEBUG',
-        format='<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | '
-               '<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - '
-               '<level>{message}</level>',
-        enqueue=True,
-        rotation='7 days',
-        retention='30 days',
-    )
+    logger = get_logger('davaiops', app.config.get('LOG_DIR'), show_backtrace=True, base_level='DEBUG')
     logger.debug('Logger started. Binding to app handler.')
-    app.logger.addHandler(InterceptHandler())
+    app.logger.addHandler(InterceptHandler(logger=logger))
+    app.extensions.setdefault('loguru', logger)
 
     # Register routes
     for rt in [admin, api, koned, main, users, errors]:

@@ -1,6 +1,8 @@
 from pathlib import Path
 
-KEY_DIR = Path().home().joinpath('keys')
+HOME = Path().home()
+KEY_DIR = HOME.joinpath('keys')
+_LOG_DIR = HOME.joinpath('logs')
 
 
 def get_local_secret(fpath: Path) -> str:
@@ -39,6 +41,7 @@ class ProductionConfig(BaseConfig):
     Production-specific config
     """
     DEBUG = False
+    LOG_DIR = _LOG_DIR.joinpath('davaiops_prod')
 
 
 class DevelopmentConfig(BaseConfig):
@@ -48,3 +51,4 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     TEMPLATES_AUTO_RELOAD = True
+    LOG_DIR = _LOG_DIR.joinpath('davaiops_dev')

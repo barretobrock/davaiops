@@ -1,4 +1,3 @@
-import time
 from flask import (
     current_app,
     render_template,
@@ -6,10 +5,7 @@ from flask import (
     make_response,
     Blueprint
 )
-from twilio.twiml.voice_response import (
-    Dial,
-    VoiceResponse
-)
+from twilio.twiml.voice_response import VoiceResponse
 
 
 koned = Blueprint('koned', __name__, url_prefix='/koned')
@@ -43,11 +39,8 @@ def vota_vastu():
         # response.reject()
     else:
         current_app.logger.info('Caller is in allowlist...')
-        # dial = Dial()
-        # dial.number(',1,,9,,')
         response.say('This is an automated reception channel. Please hold.')
         response.play(digits='ww1wwwww9')
-        # response.append(dial)
         response.pause(5)
         response.hangup()
     current_app.logger.debug(f'Replying with {response}')
