@@ -4,14 +4,15 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <!-- CSS -->
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <!-- JS -->
+
         <!-- FontAwesome -->
         <script src="https://use.fontawesome.com/9b3bd4052a.js"></script>
+
         {% if title %}
             <title>davaiops.com - {{ title }}</title>
         {% else %}
@@ -19,6 +20,14 @@
         {% endif %}
     </head>
     <body>
+        <!-- JS/JQuery -->
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Bootstrap JavaScript Bundle with Popper (for dropdowns) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <!-- Flash message timeout -->
+        <script type="text/javascript">
+            window.setTimeout("for (const elem of document.getElementsByClassName('alert')) {elem.style.display = 'none';}", 2000);
+        </script>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
                 <img class="nav-logo" src="{{ url_for('static', filename='images/favicon.png') }}" alt="20-sided die logo">
@@ -27,7 +36,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav">
                     {% set nav_dict = [
                         ('main.projects', 'Projects'),
                         ('main.contact', 'Contact')
@@ -39,24 +48,33 @@
                         </li>
                     {% endfor %}
                 </ul>
-                 <!-- Navbar Right Side -->
-                <div class="navbar-nav">
-                    {% if current_user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{{ url_for('admin.tables') }}">Admin</a>
-                        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
-                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Log Out</a>
-                    {% else %}
-                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
-                    {% endif %}
-                </div>
             </div>
+             <!-- Navbar Right Side -->
+            <ul class="navbar-nav justify-content-right">
+                {% if current_user.is_authenticated %}
+                    {% set right_nav = [
+                        ('admin.tables', 'Admin'),
+                        ('users.account', 'Account'),
+                        ('users.logout', 'Log Out'),
+                    ] -%}
+                {% else %}
+                    {% set right_nav = [
+                        ('users.login', 'Log In')
+                    ] -%}
+                {% endif %}
+                {% for id, caption in right_nav %}
+                    <li class="nav-item {{'active' if request.endpoint == id}}">
+                        <a class="nav-link" href="{{ url_for(id) }}">{{ caption }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         </nav>
         {% block content %}
-            <div class="container">
+            <div id="content" class="container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
-                            <div class="alert {{ category }}"> {{ message|capitalize }} </div>
+                            <div class="alert alert-{{ category }}" role="alert"> {{ message|capitalize }} </div>
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
@@ -76,11 +94,5 @@
                 {% block app_content %}{% endblock app_content %}
             </div>
         {% endblock content %}
-
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>

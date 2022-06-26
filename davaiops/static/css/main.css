@@ -1,8 +1,70 @@
+body {
+    padding-bottom: 70px;
+    background-color: #2e2f35;
+}
+.accordion-button,
+.accordion-button:not(.collapsed),
+.accordion-item {
+    background-color: #41424b;
+    border: 1px #acacac;
+}
+
+h2,
+h3,
+fieldset,
+small.text-muted,
+.accordion-button,
+.accordion-body,
+.table-wrapper label,
+.table-wrapper div[role="status"]{
+    color: #acacac !important;
+}
+
+.actor-name {
+    display: inline-flex;
+    min-height: 20px;
+    align-items: center;
+}
+
+.actor-1 {
+    color: #28a745;
+}
+
+.actor-2 {
+    color: #17a2b8;
+}
+
+.innerjoin-char {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 40px;
+    font-weight: bolder;
+    color: #ffc107;
+    vertical-align: center;
+}
+
+.centered-header {
+    display: flex;
+    justify-content: center;
+}
+
+.spinner-container {
+    position: absolute;
+    left: 50%;
+}
+
 /* NAV STUFF */
 .nav-logo {
     width: 25px;
+    margin-left: 10px;
 }
 
+.active {
+    font-weight: bold;
+}
+li.nav-item.active a {
+    color: #ffc107 !important;
+}
 
 /* BLOG POST STUFF */
 article {

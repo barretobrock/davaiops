@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "davaiops"
-version = '1.0.4'
+version = '1.0.5'
 description = "A Flask webapp for hosting projects."
 authors = ["bobrock <bobrock@tuta.io>"]
 license = "MIT"
@@ -17,7 +17,9 @@ include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+gunicorn = "^20.1.0"
 pukr = { git = "https://github.com/barretobrock/pukr.git", branch = "main" }
+cinemagoer = "^2022.2.11"
 Flask = "2.1.1"
 requests = ">=2.23.0"
 Flask-Admin = "1.6.0"
@@ -26,6 +28,7 @@ Flask-Login = "^0.6.0"
 Flask-Security = "^3.0.0"
 Flask-SQLAlchemy = "^2.5.1"
 itsdangerous = "2.1.2"
+pandas = "^1.4.3"
 sqlalchemy = "^1.4.35"
 twilio = "^7.9.3"
 Werkzeug = "2.1.1"

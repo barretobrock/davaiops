@@ -1,5 +1,29 @@
 {% extends 'base.html' %}
 
+
+{% set projects = [
+    {
+        'name': 'Actor Inner Join (WIP)',
+        'href': '/projects/aij/begin',
+        'desc': 'Extracts movie & tv show data for two actors and attempts to perform an inner join on the data... Basically resulting in a hopefully interesting profile of works in which the two actors have starred in the same title.'
+    }
+] -%}
+
 {% block app_content %}
-    <h2>Coming Soon!</h2>
-{% endblock app_content %}
+    <h2 class="mt-2 mb-5 mx-auto centered-header">Projects</h2>
+    <div class="accordion" id="project-list">
+        {% for project in projects %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="project{{ loop.index }}-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#project{{ loop.index }}-body" aria-expanded="true" aria-controls="project{{ loop.index }}-body">{{ project['name'] }}</button>
+                </h2>
+                <div id="project{{ loop.index }}-body" class="accordion-collapse collapse" aria-labelledby="project{{ loop.index }}-header" data-bs-parent="#project-list">
+                    <div class="accordion-body">
+                        {{ project['desc'] }}
+                    </div>
+                    <a class="btn btn-primary project-go-btn" href="{{ project['href'] }}" role="button" >Check it out!</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

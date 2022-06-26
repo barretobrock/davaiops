@@ -15,6 +15,19 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [1.0.5] - 2022-06-25
+#### Added
+ - `gunicorn` to requirements (oof)
+ - Darkmode styles to page
+ - `/projects` route
+ - Actor Inner Join project
+#### Changed
+ - Bootstrap CSS update
+#### Deprecated
+#### Removed
+#### Fixed
+#### Security
+ 
 ### [1.0.4] - 2022-06-25
 #### Added
  - Better error handlers

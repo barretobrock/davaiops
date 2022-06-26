@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.js"></script>
+    <script>
+        {% set col, direction = order_list %}
+        $(document).ready(function () {
+            $('#{{ tbl_id_name }}').DataTable({
+                "pageLength": 100,
+                "order": [[{{ col }}, '{{ direction }}']],
+            });
+        });
+
+    </script>
+
+
+    <ul class="nav justify-content-end mt-1 mb-1">
+        <li class="nav-item">
+            <a class="btn btn-primary" href="{{ url_for('projects.begin_actor_innerjoin') }}" role="button" >Again!</a>
+        </li>
+    </ul>
+    <h2 class="mx-auto centered-header">Actor InnerJoin</h2>
+    <h3 class="mx-auto centered-header">
+        <span class="actor-name actor-1">{{ names[0] }}</span>
+        <span class="innerjoin-char">&#10781;</span>
+        <span class="actor-name actor-2">{{ names[1] }}</span>
+    </h3>
+    <div class="table-wrapper mt-1">
+        <table class="table table-sm table-bordered table-striped table-dark" id="{{ tbl_id_name }}">
+            <thead>
+                <tr>
+                    {% for hdr, vals in header_maps.items() %}
+                        <th class="{{ vals["class"] if vals['class'] else "" }}">{{ hdr }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in results_list %}
+                <tr>
+                    {%  for k in header_maps.values() %}
+                        <td class="{{ k["class"] if k['class'] else "" }}">
+                            {% if k['path'] %}
+                                <a href="{{ k['path']|format(entry[k['col']]) }}" role="button">{{ entry[k['col']] }}</a>
+                            {% else %}
+                                {{ entry[k['col']] }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    {% if results_list| length > 0 %}
+                        {% for i in range(results_list[0].keys()| length) %}
+                            {%  if i == header_maps.keys()| length - 1 %}
+                                <td>Total: {{ results_list| length }} </td>
+                            {% elif i < header_maps.keys()| length - 1 %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
