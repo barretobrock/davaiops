@@ -27,20 +27,31 @@ small.text-muted,
 }
 
 .actor-1 {
-    color: #28a745;
+    color: #28a745 !important;
 }
 
 .actor-2 {
-    color: #17a2b8;
+    color: #17a2b8 !important;
 }
 
 .innerjoin-char {
-    margin-left: 5px;
-    margin-right: 5px;
-    font-size: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 50px;
     font-weight: bolder;
     color: #ffc107;
-    vertical-align: center;
+}
+
+#aij-results_wrapper .row:first-child {
+    margin-bottom: 5px;
+}
+
+#aij-results_length label {
+    display: inline-flex;
+}
+#aij-results_filter label {
+    display: flex;
+    float: right;
 }
 
 .centered-header {
